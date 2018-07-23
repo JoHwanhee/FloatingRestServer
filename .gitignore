@@ -1,0 +1,9 @@
+*.user
+*.VC.db
+.idea/
+.vs/
+.git/
+obj/
+bin/
+Testbed/
+TestResults/
