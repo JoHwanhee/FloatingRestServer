@@ -40,12 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Common\Loggers\UdpLogger.cs" />
+    <Compile Include="Common\Loggers\TcpLogger.cs" />
     <Compile Include="Common\Loggers\ConsoleLogger.cs" />
     <Compile Include="Common\Loggers\FileLogger.cs" />
     <Compile Include="Common\Loggers\ILogger.cs" />
     <Compile Include="Common\Loggers\LogEvent.cs" />
     <Compile Include="Common\Loggers\LogLevel.cs" />
+    <Compile Include="Common\Loggers\LogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

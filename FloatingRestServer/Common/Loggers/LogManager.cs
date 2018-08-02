@@ -1,81 +1,48 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace FloatingRestServer.Common.Loggers
 {
-    public class FileLogger
+    public class FloatingRestServerLogger : IDisposable, ILogger
     {
         public LogLevel LogLevel { get; set; }
-        public ConcurrentQueue<LogEvent> Logs = new ConcurrentQueue<LogEvent>();
-        private bool _isStarted;
-        private readonly object _arrayLockObject = new object();
+        private static readonly FileLogger FileLogger = new FileLogger();
+        private static readonly ILogger ConsoleLogger = new ConsoleLogger();
+        private static  FloatingRestServerLogger logger = new FloatingRestServerLogger();
 
-        public string LogFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"{DateTime.Now.ToShortDateString()}.log");
-
-        public FileLogger()
+        private FloatingRestServerLogger()
         {
-            CreateDirectory(LogFullName);
-            Start();
+            StartFileLogger();
         }
 
-        private void CreateDirectory(string fileName)
+        public static ILogger GetLogger()
         {
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                return;
-            }
-
-            var directoryName = Path.GetDirectoryName(fileName);
-            if (string.IsNullOrWhiteSpace(directoryName))
-            {
-                return;
-            }
-
-            Directory.CreateDirectory(directoryName);
+            return logger;
+        }
+        
+        public static void StartFileLogger()
+        {
+            FileLogger.Start();
         }
 
-        public void Start()
+        public static void StopFilelogger()
         {
-            _isStarted = true;
-            Task.Factory.StartNew(WriteLogWorker);
+            FileLogger.Stop();
         }
 
-        public void Stop()
+        public void Dispose()
         {
-            _isStarted = false;
+            StopFilelogger();
         }
 
-        public void WriteLogWorker()
-        {
-            while (_isStarted)
-            {
-                lock (_arrayLockObject)
-                {
-                    if (Logs.TryDequeue(out var logEvent))
-                    {
-                        using (StreamWriter writer = new StreamWriter(LogFullName, true))
-                        {
-                            writer.WriteLine(logEvent.ToString());
-                        }
-                    }
-                }
-            }
-        }
-
+        
         public void Log(LogEvent logEvent)
         {
-            Task.Factory.StartNew(() =>
-            {
-                lock (_arrayLockObject)
-                {
-                    Logs.Enqueue(logEvent);
-                }
-            });
+            FileLogger.Log(logEvent);
+            ConsoleLogger.Log(logEvent);
         }
 
         public void Trace(object obj)

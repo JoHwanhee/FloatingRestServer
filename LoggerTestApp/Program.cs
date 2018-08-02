@@ -7,7 +7,7 @@ namespace LoggerTestApp
     {
         static void Main(string[] args)
         {
-            ILogger logger = new ConsoleLogger();
+            ILogger logger = FloatingRestServerLogger.GetLogger();
             logger.Trace(1);
             logger.Trace("Tracetest");
             logger.Trace("test", new NullReferenceException());
@@ -31,7 +31,8 @@ namespace LoggerTestApp
             logger.Fatal(1);
             logger.Fatal("test");
             logger.Fatal("test", new NullReferenceException());
-            
+
+            FloatingRestServerLogger.StopFilelogger();
             Console.ReadLine();
         }
     }
