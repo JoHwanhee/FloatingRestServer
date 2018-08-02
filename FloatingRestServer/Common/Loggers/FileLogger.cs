@@ -11,8 +11,8 @@ namespace FloatingRestServer.Common.Loggers
     public class FileLogger
     {
         public LogLevel LogLevel { get; set; }
-        public ConcurrentQueue<LogEvent> Logs = new ConcurrentQueue<LogEvent>();
         private bool _isStarted;
+        private readonly ConcurrentQueue<LogEvent> _logs = new ConcurrentQueue<LogEvent>();
         private readonly object _arrayLockObject = new object();
 
         public string LogFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"{DateTime.Now.ToShortDateString()}.log");
@@ -56,7 +56,7 @@ namespace FloatingRestServer.Common.Loggers
             {
                 lock (_arrayLockObject)
                 {
-                    if (Logs.TryDequeue(out var logEvent))
+                    if (_logs.TryDequeue(out var logEvent))
                     {
                         using (StreamWriter writer = new StreamWriter(LogFullName, true))
                         {
@@ -73,7 +73,7 @@ namespace FloatingRestServer.Common.Loggers
             {
                 lock (_arrayLockObject)
                 {
-                    Logs.Enqueue(logEvent);
+                    _logs.Enqueue(logEvent);
                 }
             });
         }

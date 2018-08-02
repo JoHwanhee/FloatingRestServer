@@ -47,7 +47,7 @@
     <Compile Include="Common\Loggers\ILogger.cs" />
     <Compile Include="Common\Loggers\LogEvent.cs" />
     <Compile Include="Common\Loggers\LogLevel.cs" />
-    <Compile Include="Common\Loggers\LogManager.cs" />
+    <Compile Include="Common\Loggers\FloatingRestServerLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

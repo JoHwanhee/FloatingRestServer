@@ -4,6 +4,8 @@ namespace FloatingRestServer.Common.Loggers
 {
     public class UdpLogger : ILogger
     {
+        // todo : use syslog protocol
+
         public LogLevel LogLevel { get; set; }
         public void Log(LogEvent logEvent)
         {

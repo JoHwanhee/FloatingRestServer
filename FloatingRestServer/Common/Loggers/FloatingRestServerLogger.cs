@@ -11,7 +11,7 @@ namespace FloatingRestServer.Common.Loggers
         public LogLevel LogLevel { get; set; }
         private static readonly FileLogger FileLogger = new FileLogger();
         private static readonly ILogger ConsoleLogger = new ConsoleLogger();
-        private static  FloatingRestServerLogger logger = new FloatingRestServerLogger();
+        private static readonly FloatingRestServerLogger Logger = new FloatingRestServerLogger();
 
         private FloatingRestServerLogger()
         {
@@ -20,7 +20,7 @@ namespace FloatingRestServer.Common.Loggers
 
         public static ILogger GetLogger()
         {
-            return logger;
+            return Logger;
         }
         
         public static void StartFileLogger()
@@ -32,19 +32,15 @@ namespace FloatingRestServer.Common.Loggers
         {
             FileLogger.Stop();
         }
-
         public void Dispose()
         {
             StopFilelogger();
         }
-
-        
         public void Log(LogEvent logEvent)
         {
             FileLogger.Log(logEvent);
             ConsoleLogger.Log(logEvent);
         }
-
         public void Trace(object obj)
         {
             Log(new LogEvent(LogLevel.Trace, obj.ToString(), DateTime.Now));
