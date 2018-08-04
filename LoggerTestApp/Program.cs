@@ -7,7 +7,8 @@ namespace LoggerTestApp
     {
         static void Main(string[] args)
         {
-            ILogger logger = FloatingRestServerLogger.GetLogger();
+            RestServerLogger logger = LogManager.Instance.Logger;
+            logger.SetLogLevels(LogLevel.Info, LogLevel.Fatal);
             logger.Trace(1);
             logger.Trace("Tracetest");
             logger.Trace("test", new NullReferenceException());
@@ -32,7 +33,6 @@ namespace LoggerTestApp
             logger.Fatal("test");
             logger.Fatal("test", new NullReferenceException());
 
-            FloatingRestServerLogger.StopFilelogger();
             Console.ReadLine();
         }
     }

@@ -5,7 +5,6 @@ namespace FloatingRestServer.Common.Loggers
     public interface ILogger
     {
         LogLevel LogLevel { get; set; }
-        void Log(LogEvent logEvent);
         void Trace(object obj);
         void Trace(string message);
         void Trace(string message, Exception e);

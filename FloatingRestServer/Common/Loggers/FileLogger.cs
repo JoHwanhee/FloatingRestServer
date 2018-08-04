@@ -8,18 +8,20 @@ using System.Threading.Tasks;
 
 namespace FloatingRestServer.Common.Loggers
 {
-    public class FileLogger
+    public class FileLogger : LoggerCore
     {
-        public LogLevel LogLevel { get; set; }
         private bool _isStarted;
         private readonly ConcurrentQueue<LogEvent> _logs = new ConcurrentQueue<LogEvent>();
         private readonly object _arrayLockObject = new object();
-
+        
         public string LogFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"{DateTime.Now.ToShortDateString()}.log");
+        private readonly Thread _writeWoker = null;
+
 
         public FileLogger()
         {
             CreateDirectory(LogFullName);
+            _writeWoker = new Thread(WriteLogWorker);
             Start();
         }
 
@@ -39,15 +41,11 @@ namespace FloatingRestServer.Common.Loggers
             Directory.CreateDirectory(directoryName);
         }
 
-        public void Start()
+        private void Start()
         {
             _isStarted = true;
-            Task.Factory.StartNew(WriteLogWorker);
-        }
-
-        public void Stop()
-        {
-            _isStarted = false;
+            _writeWoker.IsBackground = true;
+            _writeWoker.Start();
         }
 
         public void WriteLogWorker()
@@ -67,110 +65,18 @@ namespace FloatingRestServer.Common.Loggers
             }
         }
 
-        public void Log(LogEvent logEvent)
+        public override void Log(LogEvent logEvent)
         {
-            Task.Factory.StartNew(() =>
+            if (LogLevel <= logEvent.LogLevel)
             {
-                lock (_arrayLockObject)
+                Task.Factory.StartNew(() =>
                 {
-                    _logs.Enqueue(logEvent);
-                }
-            });
-        }
-
-        public void Trace(object obj)
-        {
-            Log(new LogEvent(LogLevel.Trace, obj.ToString(), DateTime.Now));
-        }
-
-        public void Trace(string message)
-        {
-            Log(new LogEvent(LogLevel.Trace, message, DateTime.Now));
-        }
-
-        public void Trace(string message, Exception e)
-        {
-            Log(new LogEvent(LogLevel.Trace, ExceptionToString(message, e), DateTime.Now));
-        }
-
-        public void Debug(object obj)
-        {
-            Log(new LogEvent(LogLevel.Debug, obj.ToString(), DateTime.Now));
-        }
-
-        public void Debug(string message)
-        {
-            Log(new LogEvent(LogLevel.Debug, message, DateTime.Now));
-        }
-
-        public void Debug(string message, Exception e)
-        {
-            Log(new LogEvent(LogLevel.Debug, ExceptionToString(message, e), DateTime.Now));
-        }
-
-        public void Info(object obj)
-        {
-            Log(new LogEvent(LogLevel.Info, obj.ToString(), DateTime.Now));
-        }
-
-        public void Info(string message)
-        {
-            Log(new LogEvent(LogLevel.Info, message, DateTime.Now));
-        }
-
-        public void Info(string message, Exception e)
-        {
-            Log(new LogEvent(LogLevel.Info, ExceptionToString(message, e), DateTime.Now));
-        }
-
-        public void Warn(object obj)
-        {
-            Log(new LogEvent(LogLevel.Warn, obj.ToString(), DateTime.Now));
-        }
-
-        public void Warn(string message)
-        {
-            Log(new LogEvent(LogLevel.Warn, message, DateTime.Now));
-        }
-
-        public void Warn(string message, Exception e)
-        {
-            Log(new LogEvent(LogLevel.Warn, ExceptionToString(message, e), DateTime.Now));
-        }
-
-        public void Error(object obj)
-        {
-            Log(new LogEvent(LogLevel.Error, obj.ToString(), DateTime.Now));
-        }
-
-        public void Error(string message)
-        {
-            Log(new LogEvent(LogLevel.Error, message, DateTime.Now));
-        }
-
-        public void Error(string message, Exception e)
-        {
-            Log(new LogEvent(LogLevel.Error, ExceptionToString(message, e), DateTime.Now));
-        }
-
-        public void Fatal(object obj)
-        {
-            Log(new LogEvent(LogLevel.Fatal, obj.ToString(), DateTime.Now));
-        }
-
-        public void Fatal(string message)
-        {
-            Log(new LogEvent(LogLevel.Fatal, message, DateTime.Now));
-        }
-
-        public void Fatal(string message, Exception e)
-        {
-            Log(new LogEvent(LogLevel.Fatal, ExceptionToString(message, e), DateTime.Now));
-        }
-
-        private string ExceptionToString(string message, Exception e)
-        {
-            return $"{message} {e.Message} {e.StackTrace}";
+                    lock (_arrayLockObject)
+                    {
+                        _logs.Enqueue(logEvent);
+                    }
+                });
+            }
         }
     }
 }

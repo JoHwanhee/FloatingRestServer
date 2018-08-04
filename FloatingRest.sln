@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FloatingRestServer", "Float
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerTestApp", "LoggerTestApp\LoggerTestApp.csproj", "{B48D3C25-CE0C-4832-AD30-4395E7F76302}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerTestApp", "ServerTestApp\ServerTestApp.csproj", "{A5353C6F-3DFE-4577-AD19-18670149E441}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B48D3C25-CE0C-4832-AD30-4395E7F76302}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B48D3C25-CE0C-4832-AD30-4395E7F76302}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B48D3C25-CE0C-4832-AD30-4395E7F76302}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5353C6F-3DFE-4577-AD19-18670149E441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5353C6F-3DFE-4577-AD19-18670149E441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5353C6F-3DFE-4577-AD19-18670149E441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5353C6F-3DFE-4577-AD19-18670149E441}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

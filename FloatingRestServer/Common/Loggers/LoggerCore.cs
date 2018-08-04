@@ -6,41 +6,12 @@ using System.Threading.Tasks;
 
 namespace FloatingRestServer.Common.Loggers
 {
-    public class FloatingRestServerLogger : IDisposable, ILogger
+    public abstract class LoggerCore : ILogger
     {
-        public LogLevel LogLevel { get; set; }
-        private static readonly FileLogger FileLogger = new FileLogger();
-        private static readonly ILogger ConsoleLogger = new ConsoleLogger();
-        private static readonly FloatingRestServerLogger Logger = new FloatingRestServerLogger();
+        public LogLevel LogLevel { get; set; } = LogLevel.Trace;
 
-        private FloatingRestServerLogger()
-        {
-            StartFileLogger();
-        }
+        public abstract void Log(LogEvent logEvent);
 
-        public static ILogger GetLogger()
-        {
-            return Logger;
-        }
-        
-        public static void StartFileLogger()
-        {
-            FileLogger.Start();
-        }
-
-        public static void StopFilelogger()
-        {
-            FileLogger.Stop();
-        }
-        public void Dispose()
-        {
-            StopFilelogger();
-        }
-        public void Log(LogEvent logEvent)
-        {
-            FileLogger.Log(logEvent);
-            ConsoleLogger.Log(logEvent);
-        }
         public void Trace(object obj)
         {
             Log(new LogEvent(LogLevel.Trace, obj.ToString(), DateTime.Now));
