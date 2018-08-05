@@ -1,5 +1,5 @@
 # FloatingRestServer
-A simple way to use Rest Server In C# is using System.Net.Http. but that is 
+A simple way to use Rest Server In C#
 
 # Features
 
