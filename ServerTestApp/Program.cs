@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FloatingRestServer.Common.Loggers;
 using FloatingRestServer.Server;
+using ServerTestApp.WebService;
 
 namespace ServerTestApp
 {
@@ -30,6 +31,7 @@ namespace ServerTestApp
             server.Add(new PostTestRouter(HttpMethod.Post, $"/test/post"));
 
             server.Start();
+            server.Add(new HelloWorldRouter(HttpMethod.Get, $"/hello/tttt", "tttt"));
             Console.ReadLine();
             server.Stop();
         }

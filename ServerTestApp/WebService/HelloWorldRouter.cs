@@ -17,7 +17,7 @@ namespace ServerTestApp.WebService
 
         public override void Route(HttpListenerContext context)
         {
-            context.Response.SendResponse(HttpStatusCode.OK, "HelloWorld", Encoding.UTF8);
+            context.Response.SendResponse(HttpStatusCode.OK, $"HelloWorld {Text}", Encoding.UTF8);
         }
     }
 }
