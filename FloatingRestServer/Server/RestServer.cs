@@ -27,7 +27,7 @@ namespace FloatingRestServer.Server
         public int Port;
         public int Connections;
 
-        public List<IRouter> RouterList = new List<IRouter>();
+        public List<RouterCore> RouterList = new List<RouterCore>();
 
         public RestServer(RestServerSettings settings)
         {
@@ -72,37 +72,34 @@ namespace FloatingRestServer.Server
                 // todo : how to check cannot found route ?
                 var context = await _listener.GetContextAsync();
                 
-                var successCount = 0;
-                foreach (IRouter router in RouterList)
+                foreach (RouterCore router in RouterList)
                 {
-                    successCount += Route(router, context);
-                }
-                
-                if (successCount == 0)
-                {
-                    Route(new NotFoundRouter(), context);
+                    Route(router, context);
                 }
             }
         }
         
-        private int Route(IRouter router, HttpListenerContext context)
+        private void Route(IRouter router, HttpListenerContext context)
         {
-            if (router.Path == context.Request.RawUrl)
+            if (router.Method.ToString() != context.Request.HttpMethod)
             {
-                router.Route(context);
-
-                return 1;
+                return;
             }
 
-            return 0;
+            if (router.Path != context.Request.RawUrl)
+            {
+                return;
+            }
+
+            router.Route(context);
         }
 
-        public void Add(IRouter router)
+        public void Add(RouterCore router)
         {
             RouterList.Add(router);
         }
 
-        public void Remove(IRouter router)
+        public void Remove(RouterCore router)
         {
             RouterList.Remove(router);
         }

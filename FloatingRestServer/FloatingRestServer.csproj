@@ -52,12 +52,13 @@
     <Compile Include="Common\Loggers\LogLevel.cs" />
     <Compile Include="Common\Loggers\LogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\Extension\HttpListenerContextExtension.cs" />
     <Compile Include="Server\NotFoundRouter.cs" />
     <Compile Include="Server\IRestServer.cs" />
     <Compile Include="Server\IRouter.cs" />
     <Compile Include="Server\RestServer.cs" />
     <Compile Include="Server\RestServerSettings.cs" />
+    <Compile Include="Server\RouterCore.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

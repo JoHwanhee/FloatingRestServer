@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FloatingRestServer.Common.Loggers;
@@ -23,8 +24,10 @@ namespace ServerTestApp
 
             foreach (var num in Enumerable.Range(0, 10))
             {
-                server.Add(new HelloWorldRouter($"/hello/{num}", num.ToString()));
+                server.Add(new HelloWorldRouter(HttpMethod.Get, $"/hello/{num}", num.ToString()));
             }
+
+            server.Add(new ImageTestRouter(HttpMethod.Get, $"/test/img"));
 
             server.Start();
             Console.ReadLine();

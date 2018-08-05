@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace FloatingRestServer.Server
 {
-    public interface IRestServer
+    internal interface IRestServer
     {
         bool IsListening { get; }
         string ListenerPrefix { get; }
         void Start();
         void Stop();
     }
-
 }

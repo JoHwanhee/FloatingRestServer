@@ -13,8 +13,16 @@ namespace FloatingRestServer.Server
         public RestServerLogger Logger { get; set; } = LogManager.Instance.Logger;
 
         public string Schema { get; set; }
-        public string Host;
-        public int Connections;
-        public int Port;
+        public string Host { get; set; }
+        public int Port { get; set; }
+        public int Connections { get; set; }
+
+        public RestServerSettings()
+        {
+            Schema = "http";
+            Host = "localhost";
+            Port = 123;
+            Connections = 50;
+        }
     }
 }

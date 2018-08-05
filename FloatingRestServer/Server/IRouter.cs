@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
+using System.Net.Http;
 
 namespace FloatingRestServer.Server
 {
-    public interface IRouter
+    internal interface IRouter
     {
+        HttpMethod Method { get; set; }
         string Path { get; set; }
-
-        HttpListenerResponse Route(HttpListenerContext context);
+        void Route(HttpListenerContext context);
     }
 }
