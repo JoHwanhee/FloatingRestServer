@@ -27,7 +27,7 @@ namespace FloatingRestServer.Server
         public int Port;
         public int Connections;
 
-        private IRouter Router;
+        private readonly IRouter _router = new Router();
 
         public RestServer(RestServerSettings settings)
         {
@@ -68,21 +68,13 @@ namespace FloatingRestServer.Server
             while (IsListening)
             {
                 var context = await _listener.GetContextAsync();
-                Route(context);
+                Route(_router.Route, context);
             }
         }
         
-        // todo : test code, to make IRoute class
-        private void Route(HttpListenerContext context)
+        private void Route(Action<HttpListenerContext> route, HttpListenerContext context)
         {
-            HttpListenerResponse response = context.Response;
-            string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            System.IO.Stream output = response.OutputStream;
-            output.Write(buffer, 0, buffer.Length);
-            output.Close();
-            response.Close();
+            route(context);
         }
 
         public void Stop()
