@@ -9,7 +9,7 @@ A simple way to use Rest Server In C#
 
 # To do 
 
-1. support regular expression on raw url.
+1. Support regular expression on raw url.
 
 # How to use
 
