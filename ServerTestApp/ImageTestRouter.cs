@@ -27,11 +27,11 @@ namespace ServerTestApp
                     buffer = new byte[fs.Length];
                     await fs.ReadAsync(buffer, 0, (int)fs.Length);
                 }
-                context.SendResponse(HttpStatusCode.OK, buffer, MediaTypeNames.Image.Jpeg);
+                context.Response.SendResponse(HttpStatusCode.OK, buffer, MediaTypeNames.Image.Jpeg);
             }
             catch (Exception e)
             {
-                context.SendResponse(HttpStatusCode.InternalServerError, e.ToString(), Encoding.UTF8);
+                context.Response.SendResponse(HttpStatusCode.InternalServerError, e.ToString(), Encoding.UTF8);
             }
         }
     }

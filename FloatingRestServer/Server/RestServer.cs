@@ -7,7 +7,9 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FloatingRestServer.Common.Extension;
 using FloatingRestServer.Common.Loggers;
+using FloatingRestServer.PredefinedRouters;
 
 namespace FloatingRestServer.Server
 {
@@ -65,17 +67,37 @@ namespace FloatingRestServer.Server
             _listening.Start();
         }
 
-        private async void HandleRequests()
+        private void HandleRequests()
         {
             while (IsListening)
             {
-                // todo : how to check cannot found route ?
-                var context = await _listener.GetContextAsync();
-                
-                foreach (RouterCore router in RouterList)
+                var context = _listener.BeginGetContext(ContextReady, null);
+                WaitHandle.WaitAny(new[] {context.AsyncWaitHandle});
+            }
+        }
+
+        private void ContextReady(IAsyncResult asyncResult)
+        {
+            HttpListenerContext context = null;
+            try
+            {
+                context = _listener.EndGetContext(asyncResult);
+                var request = context.Request;
+
+                if (request.AnyUrl(RouterList))
                 {
+                    var router = request.FindRouter(RouterList);
                     Route(router, context);
                 }
+                else
+                {
+                    new NotFoundRouter().Route(context);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                new InternalServerErrorRouter().Route(context);
             }
         }
         
@@ -96,6 +118,7 @@ namespace FloatingRestServer.Server
 
         public void Add(RouterCore router)
         {
+            Logger.Trace($"Add route {router.Path}.");
             RouterList.Add(router);
         }
 

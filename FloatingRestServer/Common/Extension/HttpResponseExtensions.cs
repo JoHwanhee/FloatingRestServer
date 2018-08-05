@@ -4,13 +4,13 @@ using System.Text;
 
 namespace FloatingRestServer.Common.Extension
 {
-    public static class HttpListenerContextExtension
+    public static class HttpResponseExtensions
     {
-        public static void SendResponse(this HttpListenerContext context, HttpStatusCode statusCode, string responseText, Encoding encoding)
+        public static void SendResponse(this HttpListenerResponse response, HttpStatusCode statusCode, string responseText, Encoding encoding)
         {
             byte[] buffer = encoding.GetBytes(responseText);
 
-            using (var response = context.Response)
+            using (response)
             {
                 response.StatusCode = (int)statusCode;
                 response.ContentLength64 = buffer.Length;
@@ -22,11 +22,11 @@ namespace FloatingRestServer.Common.Extension
             }
         }
 
-        public static void SendResponse(this HttpListenerContext context, HttpStatusCode statusCode, byte[] bytes, string contentType)
+        public static void SendResponse(this HttpListenerResponse response, HttpStatusCode statusCode, byte[] bytes, string contentType)
         {
             byte[] buffer = bytes;
-            context.Response.AddHeader("Content-Type", contentType);
-            using (var response = context.Response)
+            response.AddHeader("Content-Type", contentType);
+            using (response)
             {
                 response.StatusCode = (int)statusCode;
                 response.ContentLength64 = buffer.Length;

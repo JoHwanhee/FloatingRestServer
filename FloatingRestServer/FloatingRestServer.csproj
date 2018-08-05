@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Extension\HttpRequestExtensions.cs" />
     <Compile Include="Common\Loggers\LoggerCore.cs" />
     <Compile Include="Common\Loggers\RestServerLogger.cs" />
     <Compile Include="Common\Loggers\UdpLogger.cs" />
@@ -52,8 +53,9 @@
     <Compile Include="Common\Loggers\LogLevel.cs" />
     <Compile Include="Common\Loggers\LogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Common\Extension\HttpListenerContextExtension.cs" />
-    <Compile Include="Server\NotFoundRouter.cs" />
+    <Compile Include="Common\Extension\HttpResponseExtensions.cs" />
+    <Compile Include="PredefinedRouters\InternalServerErrorRouter.cs" />
+    <Compile Include="PredefinedRouters\NotFoundRouter.cs" />
     <Compile Include="Server\IRestServer.cs" />
     <Compile Include="Server\IRouter.cs" />
     <Compile Include="Server\RestServer.cs" />

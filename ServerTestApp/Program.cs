@@ -28,6 +28,7 @@ namespace ServerTestApp
             }
 
             server.Add(new ImageTestRouter(HttpMethod.Get, $"/test/img"));
+            server.Add(new PostTestRouter(HttpMethod.Post, $"/test/post"));
 
             server.Start();
             Console.ReadLine();
