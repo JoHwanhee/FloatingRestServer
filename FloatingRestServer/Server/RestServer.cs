@@ -63,20 +63,15 @@ namespace FloatingRestServer.Server
             Listening.Start();
         }
 
-        private void HandleRequests()
+        private async void HandleRequests()
         {
             while (IsListening)
             {
-                var context = _listener.BeginGetContext(ContextReady, null);
-                WaitHandle.WaitAll(new[] {context.AsyncWaitHandle});
+                var context = await _listener.GetContextAsync();
+                Route(context);
             }
         }
-
-        private void ContextReady(IAsyncResult result)
-        {
-            Route(_listener.EndGetContext(result));
-        }
-
+        
         // todo : test code, to make IRoute class
         private void Route(HttpListenerContext context)
         {
@@ -87,6 +82,7 @@ namespace FloatingRestServer.Server
             System.IO.Stream output = response.OutputStream;
             output.Write(buffer, 0, buffer.Length);
             output.Close();
+            response.Close();
         }
 
         public void Stop()
