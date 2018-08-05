@@ -7,7 +7,7 @@ using System.Text;
 using FloatingRestServer.Common.Extension;
 using FloatingRestServer.Server;
 
-namespace ServerTestApp
+namespace ServerTestApp.WebService
 {
     public class ImageTestRouter : RouterCore
     {

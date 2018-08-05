@@ -26,7 +26,6 @@ namespace ServerTestApp
             {
                 server.Add(new HelloWorldRouter(HttpMethod.Get, $"/hello/{num}", num.ToString()));
             }
-
             server.Add(new ImageTestRouter(HttpMethod.Get, $"/test/img"));
             server.Add(new PostTestRouter(HttpMethod.Post, $"/test/post"));
 
