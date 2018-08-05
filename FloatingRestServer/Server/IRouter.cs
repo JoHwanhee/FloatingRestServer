@@ -9,7 +9,8 @@ namespace FloatingRestServer.Server
 {
     public interface IRouter
     {
-        void Route(object context);
-        void Route(HttpListenerContext context);
+        string Path { get; set; }
+
+        HttpListenerResponse Route(HttpListenerContext context);
     }
 }

@@ -21,6 +21,11 @@ namespace ServerTestApp
                 setting.Connections = 50;
             });
 
+            foreach (var num in Enumerable.Range(0, 10))
+            {
+                server.Add(new HelloWorldRouter($"/hello/{num}", num.ToString()));
+            }
+
             server.Start();
             Console.ReadLine();
             server.Stop();

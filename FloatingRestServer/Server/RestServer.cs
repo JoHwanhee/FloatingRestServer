@@ -17,7 +17,7 @@ namespace FloatingRestServer.Server
         private readonly UriBuilder _uriBuilder;
 
         private readonly HttpListener _listener;
-        private Thread Listening;
+        private readonly Thread _listening;
 
         public bool IsListening => _listener.IsListening;
         public string ListenerPrefix => _uriBuilder.ToString();
@@ -27,13 +27,15 @@ namespace FloatingRestServer.Server
         public int Port;
         public int Connections;
 
-        private readonly IRouter _router = new Router();
+        public List<IRouter> RouterList = new List<IRouter>();
 
         public RestServer(RestServerSettings settings)
         {
             _listener = new HttpListener();
-            Listening = new Thread(HandleRequests);
-            Listening.IsBackground = true;
+            _listening = new Thread(HandleRequests)
+            {
+                IsBackground = true
+            };
 
             Logger = settings.Logger;
 
@@ -60,27 +62,55 @@ namespace FloatingRestServer.Server
             _listener.Prefixes.Clear();
             _listener.Prefixes.Add(ListenerPrefix);
             _listener.Start();
-            Listening.Start();
+            _listening.Start();
         }
 
         private async void HandleRequests()
         {
             while (IsListening)
             {
+                // todo : how to check cannot found route ?
                 var context = await _listener.GetContextAsync();
-                Route(_router.Route, context);
+                
+                var successCount = 0;
+                foreach (IRouter router in RouterList)
+                {
+                    successCount += Route(router, context);
+                }
+                
+                if (successCount == 0)
+                {
+                    Route(new NotFoundRouter(), context);
+                }
             }
         }
         
-        private void Route(Action<HttpListenerContext> route, HttpListenerContext context)
+        private int Route(IRouter router, HttpListenerContext context)
         {
-            route(context);
+            if (router.Path == context.Request.RawUrl)
+            {
+                router.Route(context);
+
+                return 1;
+            }
+
+            return 0;
+        }
+
+        public void Add(IRouter router)
+        {
+            RouterList.Add(router);
+        }
+
+        public void Remove(IRouter router)
+        {
+            RouterList.Remove(router);
         }
 
         public void Stop()
         {
             Logger.Info("Stop RestServer!");
-            Listening.Join();
+            _listening.Join();
             _listener.Stop();
         }
 
