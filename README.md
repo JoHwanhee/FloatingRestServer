@@ -13,7 +13,7 @@ A simple way to use Rest Server In C#
 
 ## How to use
 
-#### 0. Make the routs
+#### 0. Make the routes
 
 ~~~C#
 public class PostTestRouter : RouterCore
