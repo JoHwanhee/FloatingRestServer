@@ -1,4 +1,4 @@
-# FloatingRestServer
+# FloatingRestServer - Simple .NET REST Server
 A simple way to use Rest Server In C#
 
 ## Features
