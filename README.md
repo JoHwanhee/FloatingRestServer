@@ -13,8 +13,8 @@ A simple way to use Rest Server In C#
 
 ## How to use
 
-<pre>
-<code>
+
+~~~C#
             RestServer server = RestServer.Create(setting =>
             {
                 setting.Logger = LogManager.Instance.Logger;
@@ -35,6 +35,4 @@ A simple way to use Rest Server In C#
             server.Add(new HelloWorldRouter(HttpMethod.Get, $"/hello/tttt", "tttt"));
             Console.ReadLine();
             server.Stop();
-  
-</code>
-</pre>
+~~~
