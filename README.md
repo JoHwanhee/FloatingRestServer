@@ -7,10 +7,6 @@ A simple way to use Rest Server In C#
 2. Create route in run time.
 3. Easily to add rest resource.
 
-## To do 
-
-1. Support regular expression on raw url.
-
 ## How to use
 
 #### 0. Make the routes
