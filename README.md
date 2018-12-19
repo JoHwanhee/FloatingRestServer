@@ -13,4 +13,26 @@ A simple way to use Rest Server In C#
 
 ## How to use
 
-1. You can follow test source in this repo, So you are already add to rest server in your app easily.
+<code>
+   RestServer server = RestServer.Create(setting =>
+            {
+                setting.Logger = LogManager.Instance.Logger;
+                setting.Schema = "http";
+                setting.Host = "localhost";
+                setting.Port = 1234;
+                setting.Connections = 50;
+            });
+
+            foreach (var num in Enumerable.Range(0, 10))
+            {
+                server.Add(new HelloWorldRouter(HttpMethod.Get, $"/hello/{num}", num.ToString()));
+            }
+            server.Add(new ImageTestRouter(HttpMethod.Get, $"/test/img"));
+            server.Add(new PostTestRouter(HttpMethod.Post, $"/test/post"));
+
+            server.Start();
+            server.Add(new HelloWorldRouter(HttpMethod.Get, $"/hello/tttt", "tttt"));
+            Console.ReadLine();
+            server.Stop();
+  
+</code>
