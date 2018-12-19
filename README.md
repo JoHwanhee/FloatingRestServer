@@ -13,8 +13,9 @@ A simple way to use Rest Server In C#
 
 ## How to use
 
+<pre>
 <code>
-   RestServer server = RestServer.Create(setting =>
+            RestServer server = RestServer.Create(setting =>
             {
                 setting.Logger = LogManager.Instance.Logger;
                 setting.Schema = "http";
@@ -36,3 +37,4 @@ A simple way to use Rest Server In C#
             server.Stop();
   
 </code>
+</pre>
