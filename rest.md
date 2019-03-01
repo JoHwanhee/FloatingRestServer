@@ -138,7 +138,7 @@ public class ImageTestRouter : RouterCore
 
 	public override async void Route(HttpListenerContext context)
 	{
-		context.Response.Headers.Add("Content-Type", "Content-Type: application/x-www-form-urlencoded");
+		context.Response.Headers.Add("Content-Type", "image/jpeg");
 		
 		try
 		{
