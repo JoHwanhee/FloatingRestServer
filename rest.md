@@ -339,3 +339,18 @@ public override void Log(LogEvent logEvent)
         }
     }
 ```
+
+```c#
+
+Logger.Info("Start RestServer!");
+
+catch (NullPointerExeption ne)
+{
+	Logger.Error("NullPointerError in server : ", ne);
+}
+catch (Exception e)
+{
+	Logger.Error(e);
+	
+}
+```
