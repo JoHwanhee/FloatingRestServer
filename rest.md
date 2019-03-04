@@ -183,3 +183,159 @@ server.Add(new HelloWorldRouter(HttpMethod.Get, $"/hello/tttt", "tttt"));
 Console.ReadLine();
 server.Stop();
 ```
+
+```C#
+public interface ILogger
+{
+	LogLevel LogLevel { get; set; }
+	void Trace(object obj);
+	void Trace(string message);
+	void Trace(string message, Exception e);
+	void Debug(object obj);
+	void Debug(string message);
+	void Debug(string message, Exception e);
+	void Info(object obj);
+	void Info(string message);
+	void Info(string message, Exception e);
+	void Warn(object obj);
+	void Warn(string message);
+	void Warn(string message, Exception e);
+	void Error(object obj);
+	void Error(string message);
+	void Error(string message, Exception e);
+	void Fatal(object obj);
+	void Fatal(string message);
+	void Fatal(string message, Exception e);
+}
+```
+
+```C#
+public abstract class LoggerCore : ILogger
+    {
+        public LogLevel LogLevel { get; set; } = LogLevel.Trace;
+
+        public abstract void Log(LogEvent logEvent);
+
+        public void Trace(object obj)
+        {
+            Log(new LogEvent(LogLevel.Trace, obj.ToString(), DateTime.Now));
+        }
+
+        public void Trace(string message)
+        {
+            Log(new LogEvent(LogLevel.Trace, message, DateTime.Now));
+        }
+
+        public void Trace(string message, Exception e)
+        {
+            Log(new LogEvent(LogLevel.Trace, ExceptionToString(message, e), DateTime.Now));
+        }
+	
+	// 중략 
+	
+        public void Fatal(string message, Exception e)
+        {
+            Log(new LogEvent(LogLevel.Fatal, ExceptionToString(message, e), DateTime.Now));
+        }
+
+        private string ExceptionToString(string message, Exception e)
+        {
+            return $"{message} {e.Message} {e.StackTrace}";
+        }
+    }
+```
+
+
+```C#
+public class ConsoleLogger : LoggerCore
+{
+public override void Log(LogEvent logEvent)
+{
+    if (LogLevel > logEvent.LogLevel)
+    {
+	return;
+    }
+
+    switch (logEvent.LogLevel)
+    {
+	case LogLevel.Trace:
+	    Console.ForegroundColor = ConsoleColor.DarkGray;
+	    break;
+	case LogLevel.Debug:
+	    Console.ForegroundColor = ConsoleColor.Gray;
+	    break;
+	case LogLevel.Info:
+	    Console.ForegroundColor = ConsoleColor.Green;
+	    break;
+	case LogLevel.Warn:
+	    Console.ForegroundColor = ConsoleColor.Red;
+	    break;
+	case LogLevel.Error:
+	    Console.ForegroundColor = ConsoleColor.DarkRed;
+	    break;
+	case LogLevel.Fatal:
+	    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+	    break;
+	default:
+	    Console.ForegroundColor = ConsoleColor.DarkGray;
+	    break;
+    }
+
+    Console.WriteLine(logEvent.ToString());
+}
+}
+```
+
+
+```C#
+ public class FileLogger : LoggerCore
+    {
+        private bool _isStarted;
+        private readonly ConcurrentQueue<LogEvent> _logs = new ConcurrentQueue<LogEvent>();
+        private readonly object _arrayLockObject = new object();
+        
+        public string LogFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"{DateTime.Now.ToShortDateString()}.log");
+        private readonly Thread _writeWoker = null;
+
+
+        public FileLogger()
+        {
+            CreateDirectory(LogFullName);
+            _writeWoker = new Thread(WriteLogWorker);
+            Start();
+        }
+	
+	// 중략
+	
+        public void WriteLogWorker()
+        {
+            while (_isStarted)
+            {
+                lock (_arrayLockObject)
+                {
+                    if (_logs.TryDequeue(out var logEvent))
+                    {
+                        using (StreamWriter writer = new StreamWriter(LogFullName, true))
+                        {
+                            writer.WriteLine(logEvent.ToString());
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void Log(LogEvent logEvent)
+        {
+            if (LogLevel <= logEvent.LogLevel)
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    lock (_arrayLockObject)
+                    {
+                        _logs.Enqueue(logEvent);
+                    }
+                });
+            }
+        }
+    }
+```
