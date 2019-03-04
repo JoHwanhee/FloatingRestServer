@@ -211,78 +211,78 @@ public interface ILogger
 
 ```C#
 public abstract class LoggerCore : ILogger
-    {
-        public LogLevel LogLevel { get; set; } = LogLevel.Trace;
+{
+	public LogLevel LogLevel { get; set; } = LogLevel.Trace;
 
-        public abstract void Log(LogEvent logEvent);
+	public abstract void Log(LogEvent logEvent);
 
-        public void Trace(object obj)
-        {
-            Log(new LogEvent(LogLevel.Trace, obj.ToString(), DateTime.Now));
-        }
+	public void Trace(object obj)
+	{
+	    Log(new LogEvent(LogLevel.Trace, obj.ToString(), DateTime.Now));
+	}
 
-        public void Trace(string message)
-        {
-            Log(new LogEvent(LogLevel.Trace, message, DateTime.Now));
-        }
+	public void Trace(string message)
+	{
+	    Log(new LogEvent(LogLevel.Trace, message, DateTime.Now));
+	}
 
-        public void Trace(string message, Exception e)
-        {
-            Log(new LogEvent(LogLevel.Trace, ExceptionToString(message, e), DateTime.Now));
-        }
-	
+	public void Trace(string message, Exception e)
+	{
+	    Log(new LogEvent(LogLevel.Trace, ExceptionToString(message, e), DateTime.Now));
+	}
+
 	// 중략 
-	
-        public void Fatal(string message, Exception e)
-        {
-            Log(new LogEvent(LogLevel.Fatal, ExceptionToString(message, e), DateTime.Now));
-        }
 
-        private string ExceptionToString(string message, Exception e)
-        {
-            return $"{message} {e.Message} {e.StackTrace}";
-        }
-    }
+	public void Fatal(string message, Exception e)
+	{
+	    Log(new LogEvent(LogLevel.Fatal, ExceptionToString(message, e), DateTime.Now));
+	}
+
+	private string ExceptionToString(string message, Exception e)
+	{
+	    return $"{message} {e.Message} {e.StackTrace}";
+	}
+}
 ```
 
 
 ```C#
 public class ConsoleLogger : LoggerCore
 {
-public override void Log(LogEvent logEvent)
-{
-    if (LogLevel > logEvent.LogLevel)
-    {
-	return;
-    }
+	public override void Log(LogEvent logEvent)
+	{
+	    if (LogLevel > logEvent.LogLevel)
+	    {
+		return;
+	    }
 
-    switch (logEvent.LogLevel)
-    {
-	case LogLevel.Trace:
-	    Console.ForegroundColor = ConsoleColor.DarkGray;
-	    break;
-	case LogLevel.Debug:
-	    Console.ForegroundColor = ConsoleColor.Gray;
-	    break;
-	case LogLevel.Info:
-	    Console.ForegroundColor = ConsoleColor.Green;
-	    break;
-	case LogLevel.Warn:
-	    Console.ForegroundColor = ConsoleColor.Red;
-	    break;
-	case LogLevel.Error:
-	    Console.ForegroundColor = ConsoleColor.DarkRed;
-	    break;
-	case LogLevel.Fatal:
-	    Console.ForegroundColor = ConsoleColor.DarkMagenta;
-	    break;
-	default:
-	    Console.ForegroundColor = ConsoleColor.DarkGray;
-	    break;
-    }
+	    switch (logEvent.LogLevel)
+	    {
+		case LogLevel.Trace:
+		    Console.ForegroundColor = ConsoleColor.DarkGray;
+		    break;
+		case LogLevel.Debug:
+		    Console.ForegroundColor = ConsoleColor.Gray;
+		    break;
+		case LogLevel.Info:
+		    Console.ForegroundColor = ConsoleColor.Green;
+		    break;
+		case LogLevel.Warn:
+		    Console.ForegroundColor = ConsoleColor.Red;
+		    break;
+		case LogLevel.Error:
+		    Console.ForegroundColor = ConsoleColor.DarkRed;
+		    break;
+		case LogLevel.Fatal:
+		    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+		    break;
+		default:
+		    Console.ForegroundColor = ConsoleColor.DarkGray;
+		    break;
+	    }
 
-    Console.WriteLine(logEvent.ToString());
-}
+	    Console.WriteLine(logEvent.ToString());
+	}
 }
 ```
 
